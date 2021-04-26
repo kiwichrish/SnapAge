@@ -5,12 +5,27 @@
 # Settings.. not many.
 BadAge=86400  # 1 day, if a snapshot is older than a day it's bad.
 
-function checkage {
-    # by default SnapAge=-1 lets us know nothing was found.
-    SnapAge=-1
-    filesystem=$1
-    Now=$(date +%s)
 
+# Some checking things are there, just in case.
+function cmdcheck {
+    if ! command -v $1 &> /dev/null
+    then
+        echo "$1 not be found"
+        exit
+    fi
+}
+cmdcheck zfs
+cmdcheck date
+cmdcheck bc
+cmdcheck tail
+
+# the function that does the grunt work, ish.
+function checkage {
+    SnapAge=-1        # by default SnapAge=-1 lets us know nothing was found.
+    filesystem=$1     # makes the code below look nicer
+    Now=$(date +%s)   # timestamp for right now, to compare to.
+
+    # get unix timestamp of the age of the last snapshot
     LastSnap=$(zfs list -Hp -o creation -t snapshot $filesystem | tail -n 1 )
     if [[ ! -z "$LastSnap" ]]
     then
@@ -21,12 +36,12 @@ function checkage {
 # Get list of filesystems
 zfs list -H -o name > /tmp/filesystems.tmp
 
-# itterate through it
+# itterate through the listing.
 for f in $(cat /tmp/filesystems.tmp); do
     checkage $f
 
     if [[ $SnapAge -eq -1 ]] ; then
-        echo "NONE $f: "
+        echo    "NONE $f: "
     elif [[ "$SnapAge" -gt $BadAge ]]; then
         echo -n "OLD  $f: "
         echo $SnapAge
@@ -35,3 +50,5 @@ for f in $(cat /tmp/filesystems.tmp); do
         echo $SnapAge
     fi
 done
+
+rm /tmp/filesystems.tmp
