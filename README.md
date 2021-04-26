@@ -16,7 +16,7 @@ I tested on 16.04 and 18.04 and it was buggy, but, well.  They're old.  Moving o
 
 ## Install
 
-Copy script it to /usr/bin, or somewhere else you can execute it from. Your choice really.
+Copy script to /usr/bin, or somewhere else you can execute it from. Your choice really.
 
 Call it what you want even, I've just used snapage where I'm using it.
 
