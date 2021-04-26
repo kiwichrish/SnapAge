@@ -8,7 +8,11 @@ I was looking for a simple way to get a list of filesystems with old snapshots o
 
 The script has comments in it to help out understanding what I did.  It's real simple, just like me. :-)
 
-I've tested this on Ubuntu 16.04, 18.04, 20.04 and SmartOS.  Anything with bash and ZFS should be fine.
+## Issues
+
+This is only tested working on Ubuntu 20.04.
+
+I tested on 16.04 and 18.04 and it was buggy, but, well.  They're old.  Moving on.
 
 ## Install
 
