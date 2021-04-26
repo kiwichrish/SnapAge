@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# V1.0 26 April 2020 - First cut
+# V1.0 26 April 2021 - First cut
 
 # Settings.. not many.
 BadAge=86400  # 1 day, if a snapshot is older than a day it's bad.
