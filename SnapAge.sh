@@ -18,6 +18,7 @@ cmdcheck zfs
 cmdcheck date
 cmdcheck bc
 cmdcheck tail
+cmdcheck mktemp
 
 # the function that does the grunt work, ish.
 function checkage {
@@ -33,11 +34,12 @@ function checkage {
     fi
 }
 
-# Get list of filesystems
-zfs list -H -o name > /tmp/filesystems.tmp
+# Get list of filesystems into temp file
+tempfile=$(mktemp /tmp/snapage.XXXXXXXXX)
+zfs list -H -o name > $tempfile
 
 # itterate through the listing.
-for f in $(cat /tmp/filesystems.tmp); do
+for f in $(cat $tempfile); do
     checkage $f
 
     if [[ $SnapAge -eq -1 ]] ; then
@@ -51,4 +53,5 @@ for f in $(cat /tmp/filesystems.tmp); do
     fi
 done
 
-rm /tmp/filesystems.tmp
+# clean up temp file
+rm $tempfile
