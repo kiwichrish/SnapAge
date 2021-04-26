@@ -36,7 +36,8 @@ OLD  data/backup/daily/mcnas-ssd/vms: 100345
 ```
 
 etc.
- * 'NONE' is normal for container filesystems in most instances.
+ * 'NONE' No snapshot found for the filesystem.
  * 'OK' means the latest snapshot on the filesystem is 
  * 'OLD' means that the snapshot is older than BadAge setting in the script.
 
+Note that 'None' might be perfectly OK for parent filesystems.  Per the data/backup example above it's reasonable for that filesystem to not have any snapshots on it as it's the ones lower down the tree that actually have snapshots and replication.
