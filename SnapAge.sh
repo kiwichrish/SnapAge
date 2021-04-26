@@ -28,10 +28,10 @@ for f in $(cat /tmp/filesystems.tmp); do
     if [[ $SnapAge -eq -1 ]] ; then
         echo "NONE $f: "
     elif [[ "$SnapAge" -gt $BadAge ]]; then
-        echo -n "OLD $f: "
+        echo -n "OLD  $f: "
         echo $SnapAge
     else
-        echo -n "OK  $f: "
+        echo -n "OK   $f: "
         echo $SnapAge
     fi
 done
