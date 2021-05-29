@@ -27,7 +27,8 @@ function checkage {
     Now=$(date +%s)   # timestamp for right now, to compare to.
 
     # get unix timestamp of the age of the last snapshot
-    LastSnap=$(zfs list -Hp -o creation -t snapshot $filesystem | tail -n 1 )
+    # note that the '-r -d1' is not required for Ubuntu 20.04, but 18.04 didn't work without.
+    LastSnap=$(zfs list -r -d1 -Hp -o creation -t snapshot $filesystem | tail -n 1 )
     if [[ ! -z "$LastSnap" ]]
     then
         SnapAge=$(echo $Now-$LastSnap | bc )
