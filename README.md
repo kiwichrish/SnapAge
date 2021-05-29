@@ -10,9 +10,9 @@ The script has comments in it to help out understanding what I did.  It's real s
 
 ## Issues
 
-This is only tested working on Ubuntu 20.04.
+This is only tested working on Ubuntu 20.04 and 18.04.
 
-I tested on 16.04 and 18.04 and it was buggy, but, well.  They're old.  Moving on.
+It should work with other versions of zfs on Linux / BSD assuming they support the zfs list commands required.
 
 ## Install
 
