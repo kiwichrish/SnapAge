@@ -29,11 +29,17 @@ The output will look like:
 
 ```
 chris@host:~$ snapage
-NONE data: 
-NONE data/backup: 
-OK   data/backup/daily: 12566
-OK   data/backup/daily/mcnas-ssd: 12563
-OLD  data/backup/daily/mcnas-ssd/vms: 100345
+NONE tank:
+NONE tank/archive: 
+OLD  tank/archive/files2: 297d 9h 3m 48s
+OLD  tank/archive/server2: 664d 8h 3m 45s
+NONE tank/vms:
+NONE tank/vms/daily:
+OK   tank/vms/daily/server1: 9h 13m 42s
+OK   tank/vms/daily/server3: 9h 13m 48s
+NONE tank/vms/hourly:
+OK   tank/vms/hourly/hourlyserver1: 1h 13m 37s
+OLD  tank/vms/hourly/hourlyserver2: 58d 7h 13m 47s
 ```
 
 etc.
