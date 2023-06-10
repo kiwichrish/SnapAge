@@ -4,16 +4,19 @@ Script to report on age of snapshots...  For ZFS backup targets, manual checks /
 
 This is a somewhat blunt tool for a  fairly specific job.  It just lists all ZFS filesystems on a host, gets the timestamps of the latest snapshots for all of those filesystems and compares them to a fixed value.
 
-I was looking for a simple way to get a list of filesystems with old snapshots on a large ZFS backup target with 100's of filesystems and all of the options I found were part of much more complex tools and backup targets should be kept simple, so here it is.
+A couple of years ago I was looking for a simple way to get a list of filesystems with old snapshots on a very large ZFS backup target with 100's of filesystems and all of the options I found were part of much more complex tools and backup targets should be kept simple, so here it is.
 
-The script has comments in it to help out understanding what I did.  It's real simple, just like me. :-)
+The script has comments in it to help out understanding what I did.  It's pretty simple, just like me. :-)
 
-## Tested on
+If you're looking for snapshot management / rotation I'd recommend sanoid from Jim Salter.  
+
+https://github.com/jimsalterjrs/sanoid
 
 This has been tested on:
 * Ubuntu 18.04, 20.04 and 22.04
+* Debian 11, 12
 
-It should work on any other unix like OS with bash and OpenZFS.
+It should work on any other unix like OS with bash and OpenZFS and I'd welcome testing reports.
 
 ## Install
 
