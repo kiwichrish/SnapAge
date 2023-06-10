@@ -1,9 +1,10 @@
 #!/bin/bash
 # V1.0 26 April 2020 - First cut
+# V1.1 10/6/23 - Added human readable time
+#              - Added locking, 2x of these on a server with lots of snapshots can kill things
 
 # Settings.. not many.
 BadAge=86400  # 1 day, if a snapshot is older than a day it's bad.
-
 
 # Some checking things are there, just in case.
 function cmdcheck {
@@ -18,6 +19,16 @@ cmdcheck date
 cmdcheck bc
 cmdcheck tail
 cmdcheck mktemp
+cmdcheck flock
+
+# Locking file stuff.
+LOCKFILE="/run/lock/snapage.lock"
+touch $LOCKFILE  # Create lock
+exec {FD}<>$LOCKFILE  # Get file descriptor
+if ! flock -x -w 5 $FD; then
+	echo "!  Is there another copy of snapage running?  Locked by $LOCKFILE"
+	exit 1
+fi
 
 # the function that does the grunt work, ish.
 function checkage {
@@ -68,4 +79,3 @@ done
 
 # clean up temp file
 rm $tempfile
-
