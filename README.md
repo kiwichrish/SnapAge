@@ -8,17 +8,18 @@ I was looking for a simple way to get a list of filesystems with old snapshots o
 
 The script has comments in it to help out understanding what I did.  It's real simple, just like me. :-)
 
-## Issues
+## Tested on
 
-This is only tested working on Ubuntu 20.04 and 18.04.
+This has been tested on:
+* Ubuntu 18.04, 20.04 and 22.04
 
-It should work with other versions of zfs on Linux / BSD assuming they support the zfs list commands required.
+It should work on any other unix like OS with bash and OpenZFS.
 
 ## Install
 
 Copy script to /usr/bin, or somewhere else you can execute it from. Your choice really.
 
-Call it what you want even, I've just used snapage where I'm using it.
+Call it what you want even, I've just used snapage.sh where I'm using it.
 
 ## Usage
 
@@ -27,7 +28,7 @@ Run it..
 The output will look like:
 
 ```
-chrish@host:~$ snapage
+chris@host:~$ snapage
 NONE data: 
 NONE data/backup: 
 OK   data/backup/daily: 12566
