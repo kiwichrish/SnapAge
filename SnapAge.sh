@@ -1,6 +1,5 @@
 #!/bin/bash
-
-# V1.0 26 April 2021 - First cut
+# V1.0 26 April 2020 - First cut
 
 # Settings.. not many.
 BadAge=86400  # 1 day, if a snapshot is older than a day it's bad.
@@ -27,12 +26,25 @@ function checkage {
     Now=$(date +%s)   # timestamp for right now, to compare to.
 
     # get unix timestamp of the age of the last snapshot
-    # note that the '-r -d1' is not required for Ubuntu 20.04, but 18.04 didn't work without.
-    LastSnap=$(zfs list -r -d1 -Hp -o creation -t snapshot $filesystem | tail -n 1 )
+    LastSnap=$(zfs list -Hp -o creation -t snapshot $filesystem | tail -n 1 )
     if [[ ! -z "$LastSnap" ]]
     then
         SnapAge=$(echo $Now-$LastSnap | bc )
     fi
+}
+
+# Human readable time from seconds..
+# https://unix.stackexchange.com/questions/27013/displaying-seconds-as-days-hours-mins-seconds
+function displaytime {
+	local T=$1
+ 	local D=$((T/60/60/24))
+ 	local H=$((T/60/60%24))
+ 	local M=$((T/60%60))
+ 	local S=$((T%60))
+ 	(( $D > 0 )) && printf '%dd ' $D
+	(( $H > 0 )) && printf '%dh ' $H
+	(( $M > 0 )) && printf '%dm ' $M
+	printf '%ds\n' $S
 }
 
 # Get list of filesystems into temp file
@@ -47,12 +59,13 @@ for f in $(cat $tempfile); do
         echo    "NONE $f: "
     elif [[ "$SnapAge" -gt $BadAge ]]; then
         echo -n "OLD  $f: "
-        echo $SnapAge
+        displaytime $SnapAge
     else
         echo -n "OK   $f: "
-        echo $SnapAge
+        displaytime $SnapAge
     fi
 done
 
 # clean up temp file
 rm $tempfile
+
