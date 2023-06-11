@@ -83,7 +83,7 @@ for f in $(cat $tempfile); do
     else
         echo -n "OK   $f: "
         displaytime $SnapAge
-	echo "   ( ${SnapCount} snapshots)"
+	echo "   (${SnapCount} snapshots)"
     fi
 done
 
