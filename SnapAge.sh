@@ -2,6 +2,7 @@
 # V1.0 26 April 2020 - First cut
 # V1.1 10/6/23 - Added human readable time
 #              - Added locking, 2x of these on a server with lots of snapshots can kill things
+# V1.2 11/6/23 - Added # of snapshots to output, which is helpful if you're looking for issues.
 
 # Settings.. not many.
 BadAge=86400  # 1 day, if a snapshot is older than a day it's bad.
@@ -10,8 +11,8 @@ BadAge=86400  # 1 day, if a snapshot is older than a day it's bad.
 function cmdcheck {
     if ! command -v $1 &> /dev/null
     then
-        echo "$1 not be found"
-        exit
+        echo "Command $1 not found, needs to be installed?"
+        exit 1
     fi
 }
 cmdcheck zfs
@@ -20,6 +21,7 @@ cmdcheck bc
 cmdcheck tail
 cmdcheck mktemp
 cmdcheck flock
+cmdcheck wc
 
 # Locking file stuff.
 LOCKFILE="/run/lock/snapage.lock"
@@ -32,16 +34,22 @@ fi
 
 # the function that does the grunt work, ish.
 function checkage {
+	snaptempfile=$(mktemp /tmp/snapage.snaps.XXXXXXX)
+
     SnapAge=-1        # by default SnapAge=-1 lets us know nothing was found.
     filesystem=$1     # makes the code below look nicer
     Now=$(date +%s)   # timestamp for right now, to compare to.
 
-    # get unix timestamp of the age of the last snapshot
-    LastSnap=$(zfs list -Hp -o creation -t snapshot $filesystem | tail -n 1 )
+    # get list of snapshots into a file first
+    zfs list -Hp -o creation -t snapshot $filesystem > $snaptempfile 
+    LastSnap=$( tail -n 1 $snaptempfile )
+    SnapCount=$( wc -l < $snaptempfile )
     if [[ ! -z "$LastSnap" ]]
     then
         SnapAge=$(echo $Now-$LastSnap | bc )
     fi
+
+    rm $snaptempfile
 }
 
 # Human readable time from seconds..
@@ -55,7 +63,7 @@ function displaytime {
  	(( $D > 0 )) && printf '%dd ' $D
 	(( $H > 0 )) && printf '%dh ' $H
 	(( $M > 0 )) && printf '%dm ' $M
-	printf '%ds\n' $S
+	printf '%ds' $S
 }
 
 # Get list of filesystems into temp file
@@ -71,11 +79,14 @@ for f in $(cat $tempfile); do
     elif [[ "$SnapAge" -gt $BadAge ]]; then
         echo -n "OLD  $f: "
         displaytime $SnapAge
+	echo "   (${SnapCount} snapshots)"
     else
         echo -n "OK   $f: "
         displaytime $SnapAge
+	echo "   ( ${SnapCount} snapshots)"
     fi
 done
 
 # clean up temp file
 rm $tempfile
+
